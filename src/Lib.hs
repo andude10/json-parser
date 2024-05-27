@@ -1,33 +1,44 @@
 module Lib
-    ( parseJson
+    ( -- parseJson
     ) where
 
-import System.Directory ( doesFileExist )
-import Data.List ( isInfixOf )
-import Data.Text (splitOn)
+import Data.List (isInfixOf, groupBy)
 import Text.Read (readMaybe)
 
 data JsonValue = JsonNumber Double
                  | JsonString String
                  | JsonObject [(String, JsonValue)]
 
-isNumber :: String -> Bool
-isNumber str = case readMaybe str :: Maybe Double of
-    Just _  -> True
-    Nothing -> False
+-- getJsonValue :: String -> JsonValue
+-- getJsonValue content
+--     | length content > 1 = JsonObject (map getJsonValue sections)
+--     | otherwise = JsonNumber 5
 
-getJsonValue :: String -> JsonValue
-getJsonValue content = JsonNumber 5
--- | length sections > 0 = getJsonValue content
--- = content case of 
---     where sections = splitOn "," content
+    
+-- extract :: String -> JsonValue
+-- extract line = JsonNumber 5
+    
+-- isObject :: String -> Bool
+-- isObject line = (splitExpression line)!!1 
+
+-- hasBrackets :: String -> String
+-- hasBrackets = any ""
+
+-- splitExpression :: String -> [String]
+-- splitExpression = groupBy (const (/= ':'))
+
+-- splitSections :: String -> [String]
+-- splitSections = groupBy (const (/= ','))
+
 
 isValidJson :: String -> Bool
 isValidJson json = all ($ json) jsonCriterions
     where jsonCriterions = [everyBracketIsClosed]
-          everyBracketIsClosed str = and [isClosed opening closing str | opening <- ['(', '{', '['], closing <- [')', '}', ']']]
-          isClosed opening closing = (== 0) . foldr (\x acc -> if x == opening then acc + 1 else if x == closing then acc - 1 else acc) 0
 
-parseJson :: String -> Maybe JsonValue
-parseJson "" = Nothing
-parseJson content = if isValidJson content then Just $ getJsonValue content else Nothing
+everyBracketIsClosed :: String -> Bool
+everyBracketIsClosed str = all isClosed [('(', ')'), ('{', '}'), ('[', ']')]
+    where isClosed (opening, closing) = foldr (\x acc -> if x == opening then acc + 1 else if x == closing then acc - 1 else acc) 0 str == 0
+
+-- parseJson :: String -> Maybe JsonValue
+-- parseJson "" = Nothing
+-- parseJson content = if isValidJson content then Just $ getJsonValue content else Nothing

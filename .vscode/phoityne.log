@@ -1,3 +1,5 @@
 2024-05-17 23:09:55.006831590000 [402138(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
 2024-05-17 23:10:26.542634224000 [403183(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
 2024-05-17 23:11:53.554240828000 [405649(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-27 16:14:39.529521914000 [33378(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
+2024-05-27 16:14:47.108640251000 [33568(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
