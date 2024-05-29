@@ -1,9 +1,9 @@
 module Main (main) where
 
-import Lib
+import           Lexical          (getTokens)
 
-import System.Directory ( doesFileExist )
-import Data.List ( isInfixOf )
+import           Data.List        (isInfixOf)
+import           System.Directory (doesFileExist)
 
 requestInput :: IO (Maybe String)
 requestInput = do
@@ -21,5 +21,8 @@ main = do
     case input of
         Just filename -> do
             content <- readFile filename
-            print content
-        Nothing -> putStrLn "Filename is not valid"
+            let res = getTokens content
+            case res of
+                Just tokens -> print tokens
+                Nothing     -> error "Error while parsing file"
+        Nothing -> error "Filename is not valid"
