@@ -1,8 +1,7 @@
 module Main (main) where
 
-import           Lexical          (getTokens)
-
 import           Data.List        (isInfixOf)
+import           Lib              (parseJson)
 import           System.Directory (doesFileExist)
 
 requestInput :: IO (Maybe String)
@@ -19,9 +18,9 @@ main :: IO ()
 main = do
     -- input <- requestInput
     content <- readFile "t.json"
-    case getTokens content of
+    case parseJson content of
         Just tokens -> print tokens
-        Nothing -> error "getTokens returns Nothing"
+        Nothing     -> error "getTokens returns Nothing"
     -- in case input of
     --     Just filename -> do
     --         content <- readFile filename

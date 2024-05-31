@@ -1,21 +1,25 @@
 {-# OPTIONS_GHC -Wno-unused-matches #-}
+{-# LANGUAGE GADTs         #-}
 {-# LANGUAGE InstanceSigs  #-}
 {-# LANGUAGE TupleSections #-}
 
 module Lexical
-    ( getTokens
+    ( getTokens,
+      Tokens,
+      Token (..)
     ) where
 
 import           Control.Monad (ap, liftM)
 import           Data.List     (isPrefixOf)
 -- import           Data.Maybe    (catMaybes, isNothing)
 
-data Token = TNumber Double
-            | TString String
-            | TSyntax Char
-            | TBool Bool
-            | TNull
-            deriving Show
+data Token where
+  TNumber :: Double -> Token
+  TString :: String -> Token
+  TSyntax :: Char -> Token
+  TBool :: Bool -> Token
+  TNull :: Token
+  deriving (Show, Eq)
 
 type Tokens = [Token]
 

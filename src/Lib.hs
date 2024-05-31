@@ -1,47 +1,80 @@
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
+-- todo: JsonArrayItems, clean things up + write docs, test
+
 module Lib
-    ( -- parseJson
+    ( parseJson
     ) where
 
-import           Data.List (groupBy, isInfixOf)
-import           Text.Read (readMaybe)
+import           Lexical (Token (TBool, TNull, TNumber, TString, TSyntax),
+                          Tokens, getTokens)
+-- import           Data.List (groupBy, isInfixOf)
+-- import           Text.Read (readMaybe)
 
-data JsonValue = JsonNumber Double
+data JsonValue = JsonObject [(String, [JsonValue])]
+                 -- | JsonArrayItem [JsonValue]
+                 | JsonNumber Double
                  | JsonString String
-                 | JsonObject [(String, JsonValue)]
+                 | JsonBool Bool
+                 | JsonNull
+                 deriving Show
+
+-- getNestedJsonObject :: String -> Tokens -> JsonValue
+-- getNestedJsonObject name tokens = JsonObject (name, getJsonValue tokens)
+
+-- getJsonArray :: String -> Tokens -> JsonValue
+-- getJsonArray name tokens = JsonArray (name, [getJsonValue fieldTokens | fieldTokens <- getFieldsTokens tokens])
+
+-- getFieldsTokens :: Tokens -> [Tokens]
+-- getFieldsTokens [] = []
+-- getFieldsTokens tokens = fieldTokens : getFieldsTokens restOfTokens
+--     where fieldTokens = takeWhile (/= TSyntax ',') tokens
+--           restOfTokens = drop (length fieldTokens + 1) tokens
+
+getJsonValue :: Tokens -> [JsonValue]
+
+getJsonValue ((TString name):(TSyntax ':'):TNull:rest) = JsonObject [(name, [JsonNull])] : getJsonValue rest
+getJsonValue ((TString name):(TSyntax ':'):(TNumber num):rest) = JsonObject [(name, [JsonNumber num])] : getJsonValue rest
+getJsonValue ((TString name):(TSyntax ':'):(TString str):rest) = JsonObject [(name, [JsonString str])] : getJsonValue rest
+getJsonValue ((TString name):(TSyntax ':'):(TBool val):rest) = JsonObject [(name, [JsonBool val])] : getJsonValue rest
+
+getJsonValue ((TString name):(TSyntax ':'):(TSyntax '{'):rest) = JsonObject [(name, getJsonValue objectTokens)] : getJsonValue remainingTokens
+    where (objectTokens, remainingTokens) = breakNestedTokens (TSyntax '{', TSyntax '}') rest
+getJsonValue ((TString name):(TSyntax ':'):(TSyntax '['):rest) = JsonObject [(name, getJsonValue arrayTokens)] : getJsonValue remainingTokens
+    where (arrayTokens, remainingTokens) = breakNestedTokens (TSyntax '[', TSyntax ']') rest
+
+getJsonValue ((TString str):rest) = JsonString str : getJsonValue rest
+getJsonValue ((TNumber num):rest) = JsonNumber num : getJsonValue rest
+getJsonValue ((TBool val):rest) = JsonBool val : getJsonValue rest
+getJsonValue (TNull:rest) = JsonNull : getJsonValue rest
+
+getJsonValue (TSyntax '{':rest) = getJsonValue rest
+getJsonValue (TSyntax '}':rest) = getJsonValue rest
+
+getJsonValue (TSyntax '[':rest) = getJsonValue rest
+getJsonValue (TSyntax ']':rest) = getJsonValue rest
+
+getJsonValue [] = []
+
+getJsonValue tokens = error $ "Invalid match in getJsonValue " ++ show tokens
+
+-- | Split tokens into two parts: nested tokens, and the rest
+breakNestedTokens :: (Token, Token) -> Tokens -> (Tokens, Tokens)
+breakNestedTokens brackets tokens = (nestedTokens, drop (length nestedTokens) tokens)
+    where nestedTokens = getNestedTokens brackets tokens
+
+getNestedTokens :: (Token, Token) -> Tokens -> Tokens
+getNestedTokens brackets = getNestedTokensFromLevel brackets 1
+
+getNestedTokensFromLevel :: (Token, Token) -> Int -> Tokens -> Tokens
+getNestedTokensFromLevel (_, _) _ [] = []
+getNestedTokensFromLevel (start, end) level (x:xs)
+    | level == 0 = []
+    | x == start = x : getNestedTokensFromLevel (start, end) (level + 1) xs
+    | x == end = x : getNestedTokensFromLevel (start, end) (level - 1) xs
+    | otherwise = x : getNestedTokensFromLevel (start, end) level xs
 
 
--- getJsonValue :: String -> JsonValue
--- getJsonValue content
---     | length content > 1 = JsonObject (map getJsonValue sections)
---     | otherwise = JsonNumber 5
-
-
--- extract :: String -> JsonValue
--- extract line = JsonNumber 5
-
--- isObject :: String -> Bool
--- isObject line = (splitExpression line)!!1
-
--- hasBrackets :: String -> String
--- hasBrackets = any ""
-
--- splitExpression :: String -> [String]
--- splitExpression = groupBy (const (/= ':'))
-
--- splitSections :: String -> [String]
--- splitSections = groupBy (const (/= ','))
-
-
--- isValidJson :: String -> Bool
--- isValidJson json = all ($ json) jsonCriterions
---     where jsonCriterions = [everyBracketIsClosed]
-
--- everyBracketIsClosed :: String -> Bool
--- everyBracketIsClosed str = all isClosed [('(', ')'), ('{', '}'), ('[', ']')]
---     where isClosed (opening, closing) = foldr (\x acc -> if x == opening then acc + 1 else if x == closing then acc - 1 else acc) 0 str == 0
-
--- parseJson :: String -> Maybe JsonValue
--- parseJson "" = Nothing
--- parseJson content = if isValidJson content then Just $ getJsonValue content else Nothing
+parseJson :: String -> Maybe [JsonValue]
+parseJson ""      = Nothing
+parseJson content = getJsonValue . filter (/=  TSyntax ',') <$> getTokens content
