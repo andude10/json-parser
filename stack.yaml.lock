@@ -3,10 +3,26 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
-snapshots:
+packages:
 - completed:
-    sha256: 7b975b104cb3dbf0c297dfd01f936a4d2ee523241dd0b1ae960522b833fe3027
-    size: 714096
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/7.yaml
-  original: lts-22.7
+    hackage: ghci-dap-0.0.22.0@sha256:0c510d364cf8bf4a7d847b265a420deac75060f2a4c298b2ee7e90db18519040,3203
+    pantry-tree:
+      sha256: 9dda3afcfd1e5c5d57c50161b79093ba14a73622f0b99aecca5fe4a07ed8a0ea
+      size: 2775
+  original:
+    hackage: ghci-dap-0.0.22.0
+- completed:
+    hackage: ghc-paths-0.1.0.12@sha256:4e724bf088ad325777f7d35029ba9c096f05a72e0b79520bc41f0548ad1b428e,699
+    pantry-tree:
+      sha256: c882e636ab617dd26d7ea22877f24d74ac6a39b30c91094af8863153fa385976
+      size: 206
+  original:
+    hackage: ghc-paths-0.1.0.12
+- completed:
+    hackage: haskell-dap-0.0.16.0@sha256:5ee4fba7ce1b8220f486a5251a941e6cd739ab2330e8f25efc5af553a4e1c61d,944
+    pantry-tree:
+      sha256: a757fbe6b8d1ca75a46cc9546d5bfaa903531f312e4266b7b24c62427a792c21
+      size: 315
+  original:
+    hackage: haskell-dap-0.0.16.0
+snapshots: []

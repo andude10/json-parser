@@ -17,12 +17,14 @@ requestInput = do
 
 main :: IO ()
 main = do
-    input <- requestInput
-    case input of
-        Just filename -> do
-            content <- readFile filename
-            let res = getTokens content
-            case res of
-                Just tokens -> print tokens
-                Nothing     -> error "Error while parsing file"
-        Nothing -> error "Filename is not valid"
+    -- input <- requestInput
+    content <- readFile "t.json"
+    case getTokens content of
+        Just tokens -> print tokens
+        Nothing -> error "getTokens returns Nothing"
+    -- in case input of
+    --     Just filename -> do
+    --         content <- readFile filename
+    --         let tokens = getTokens content
+    --         in print tokens
+    --     Nothing -> error "Filename is not valid"

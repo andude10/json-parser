@@ -1,5 +1,30 @@
-2024-05-17 23:09:55.006831590000 [402138(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
-2024-05-17 23:10:26.542634224000 [403183(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
-2024-05-17 23:11:53.554240828000 [405649(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
-2024-05-27 16:14:39.529521914000 [33378(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
-2024-05-27 16:14:47.108640251000 [33568(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
+2024-05-31 14:41:16.745587455000 [161341(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
+2024-05-31 14:48:23.136363984000 [168846(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
+2024-05-31 14:49:56.805700153000 [170779(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/src/Lexical.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:49:56.819966936000 [170779(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:50:29.611248815000 [171327(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/src/Lexical.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:50:29.626050393000 [171327(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:50:49.993618796000 [171704(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/src/Lexical.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:50:50.009395588000 [171704(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:53:59.862969095000 [175176(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/src/Lexical.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:53:59.877373021000 [175176(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:55:33.530646774000 [176505(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 14:58:48.726841371000 [179654(ThreadId 17)] ERROR APP - [CRITICAL] can not get the initial ghci prompt.
+2024-05-31 14:59:08.111426790000 [179858(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 15:01:06.167048402000 [182520(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Main","/home/semyon/Projects/samples/haskell/json-parser/test/Spec.hs")])
+2024-05-31 15:02:48.804094987000 [183453(ThreadId 16)] CRITICAL REQUEST - invalid HANDLE. eof.
+2024-05-31 15:03:45.353802109000 [184277(ThreadId 16)] CRITICAL REQUEST - invalid HANDLE. eof.
+2024-05-31 15:05:41.237789050000 [185244(ThreadId 16)] CRITICAL REQUEST - invalid HANDLE. eof.
+2024-05-31 15:06:23.052594018000 [187454(ThreadId 17)] ERROR APP - user error (<getModule> loaded module can not find from path. </home/semyon/Projects/samples/haskell/json-parser/app/Main.hs> [("Lexical","/home/semyon/Projects/samples/haskell/json-parser/src/Lexical.hs")])
+2024-05-31 15:06:23.068391200000 [187454(ThreadId 17)] ERROR APP - start debugging failed. user error (ExecResult not found.) : Left "user error (ExecResult not found.)"
+2024-05-31 15:10:13.824030670000 [192005(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:10:13.884199400000 [192005(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:11:41.271591503000 [192891(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:11:41.333190291000 [192891(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:16:10.816356260000 [198205(ThreadId 17)] ERROR APP - start debugging failed. user error (ExecResult not found.) : Left "user error (ExecResult not found.)"
+2024-05-31 15:17:17.940992568000 [199317(ThreadId 17)] ERROR APP - start debugging failed. user error (ExecResult not found.) : Left "user error (ExecResult not found.)"
+2024-05-31 15:20:25.649173250000 [202464(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:20:25.701091514000 [202464(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:21:05.452011288000 [203466(ThreadId 17)] ERROR APP - start debugging failed. user error (ExecResult not found.) : Left "user error (ExecResult not found.)"
+2024-05-31 15:23:16.011766818000 [204137(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
+2024-05-31 15:23:16.061176746000 [204137(ThreadId 17)] ERROR APP - user error (no stacktrace found.)
