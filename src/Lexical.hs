@@ -10,8 +10,8 @@ module Lexical
     ) where
 
 import           Control.Monad (ap, liftM)
+import           Data.Char     (isSpace)
 import           Data.List     (isPrefixOf)
--- import           Data.Maybe    (catMaybes, isNothing)
 
 data Token where
   TNumber :: Double -> Token
@@ -23,6 +23,7 @@ data Token where
 
 type Tokens = [Token]
 
+-- | Monad representing extracted Token, and the remaining content after that Token
 newtype WithRemaining a = WithRemaining { runWithRemaining :: String -> (String, Maybe a) }
 
 instance Functor WithRemaining where
@@ -47,59 +48,77 @@ instance Monad WithRemaining where
             Nothing    -> (remainingStr, Nothing)
             Just value -> runWithRemaining (transform value) remainingStr
 
-
+-- | Turn Json content into tokens.
+-- Returns Nothing if couldn't extract any token
 getTokens :: String -> Maybe Tokens
-getTokens str =
-    let (remainingStr, token) = runWithRemaining (tryGetToken trimmedStr) trimmedStr
+getTokens content =
+    let (remainingStr, token) = runWithRemaining (tryExtractToken cleanedContent) cleanedContent
     in case token of
-        Nothing    -> if null remainingStr
-                      then Just []
-                      else error remainingStr
         Just value -> case getTokens remainingStr of
                         Just rest -> Just (value : rest)
                         Nothing   -> Nothing
-    where trimmedStr = filter (\x -> x /= ' ' && x /= '\t' && x /= '\n') str
+        Nothing    -> if null remainingStr
+                      then Just []
+                      else error remainingStr
+    where cleanedContent = removeSpecialCharacters $ removeFileSpaces content
 
+-- | Remove spaces outside json strings
+-- >>> removeFileSpaces "name : \"Name Surname\", number : \"+44 XXX 2345678\""
+-- "name:\"Name Surname\",number:\"+44 XXX 2345678\""
+removeFileSpaces :: String -> String
+removeFileSpaces = snd . foldr processChar (False, [])
+    where processChar chr (insideQuotes, acc)
+            | chr == '\"' = (not insideQuotes, chr : acc)
+            | isSpace chr && not insideQuotes = (insideQuotes, acc)
+            | otherwise = (insideQuotes, chr : acc)
 
-tryGetToken :: String -> WithRemaining Token
-tryGetToken str = getTSyntax str
-    `orRunNext` getTString str
-    `orRunNext` getTNull str
-    `orRunNext` getTBool str
-    `orRunNext` getTNumber str
+removeSpecialCharacters :: String -> String
+removeSpecialCharacters = filter (`notElem` "\n\t")
 
+-- | Chain extract functions.
+-- Returns Just if some function in the chain was able to extract token,
+-- otherwise returns Nothing
+tryExtractToken :: String -> WithRemaining Token
+tryExtractToken str = tryExtractTSyntax str
+    `orRunNext` tryExtractTString str
+    `orRunNext` tryExtractTNull str
+    `orRunNext` tryExtractTBool str
+    `orRunNext` tryExtractTNumber str
+
+-- | Return Token if it was extracted,
+-- otherwise run next with remaining string
 orRunNext :: WithRemaining Token -> WithRemaining Token -> WithRemaining Token
 orRunNext (WithRemaining current) (WithRemaining next) = WithRemaining $ \input ->
     let (remainingStr, token) = current input
     in case token of
-        Nothing    -> next remainingStr
         Just value -> (remainingStr, Just value)
+        Nothing    -> next remainingStr
 
-getTNumber :: String -> WithRemaining Token
-getTNumber str = WithRemaining $ \input ->
+tryExtractTNumber :: String -> WithRemaining Token
+tryExtractTNumber str = WithRemaining $ \input ->
     case reads str of
         [(num, remainingStr)] -> (remainingStr, Just $ TNumber num)
         _                     -> (input, Nothing)
 
-getTString :: String -> WithRemaining Token
-getTString str = WithRemaining $ \input ->
+tryExtractTString :: String -> WithRemaining Token
+tryExtractTString str = WithRemaining $ \input ->
     if (length input > 1) && (head input == '"')
     then let (readStr, remainingStr) = span (/= '"') (tail input)
         in (tail remainingStr, Just $ TString readStr)
     else (input, Nothing)
 
-getTSyntax :: String -> WithRemaining Token
-getTSyntax (firstChar:rest) | firstChar `elem` "{}[]:," = WithRemaining $ const (rest, Just $ TSyntax firstChar)
-getTSyntax str = WithRemaining $ const (str, Nothing)
+tryExtractTSyntax :: String -> WithRemaining Token
+tryExtractTSyntax (firstChar:rest) | firstChar `elem` "{}[]:," = WithRemaining $ const (rest, Just $ TSyntax firstChar)
+tryExtractTSyntax str = WithRemaining $ const (str, Nothing)
 
-getTBool :: String -> WithRemaining Token
-getTBool str = WithRemaining $ \input ->
+tryExtractTBool :: String -> WithRemaining Token
+tryExtractTBool str = WithRemaining $ \input ->
     if "true" `isPrefixOf` input
     then (drop 4 input, Just $ TBool True)
     else if "false" `isPrefixOf` input
     then (drop 5 input, Just $ TBool False)
     else (input, Nothing)
 
-getTNull :: String -> WithRemaining Token
-getTNull str | "null" `isPrefixOf` str = WithRemaining $ const (drop 4 str, Just TNull)
-getTNull str = WithRemaining $ const (str, Nothing)
+tryExtractTNull :: String -> WithRemaining Token
+tryExtractTNull str | "null" `isPrefixOf` str = WithRemaining $ const (drop 4 str, Just TNull)
+tryExtractTNull str = WithRemaining $ const (str, Nothing)

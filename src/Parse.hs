@@ -2,34 +2,26 @@
 
 -- todo: JsonArrayItems, clean things up + write docs, test
 
-module Lib
-    ( parseJson
+module Parse
+    ( parseJson,
+      JsonValue (..)
     ) where
 
 import           Lexical (Token (TBool, TNull, TNumber, TString, TSyntax),
                           Tokens, getTokens)
--- import           Data.List (groupBy, isInfixOf)
--- import           Text.Read (readMaybe)
 
 data JsonValue = JsonObject [(String, [JsonValue])]
-                 -- | JsonArrayItem [JsonValue]
                  | JsonNumber Double
                  | JsonString String
                  | JsonBool Bool
                  | JsonNull
                  deriving Show
 
--- getNestedJsonObject :: String -> Tokens -> JsonValue
--- getNestedJsonObject name tokens = JsonObject (name, getJsonValue tokens)
-
--- getJsonArray :: String -> Tokens -> JsonValue
--- getJsonArray name tokens = JsonArray (name, [getJsonValue fieldTokens | fieldTokens <- getFieldsTokens tokens])
-
--- getFieldsTokens :: Tokens -> [Tokens]
--- getFieldsTokens [] = []
--- getFieldsTokens tokens = fieldTokens : getFieldsTokens restOfTokens
---     where fieldTokens = takeWhile (/= TSyntax ',') tokens
---           restOfTokens = drop (length fieldTokens + 1) tokens
+-- | Convert a string containing Json content into [JsonValue].
+-- Returns Nothing if an internal error occurred
+parseJson :: String -> Maybe [JsonValue]
+parseJson ""      = Nothing
+parseJson content = getJsonValue . filter (/=  TSyntax ',') <$> getTokens content
 
 getJsonValue :: Tokens -> [JsonValue]
 
@@ -56,6 +48,7 @@ getJsonValue (TSyntax ']':rest) = getJsonValue rest
 
 getJsonValue [] = []
 
+-- todo: replace runtime error with Maybe
 getJsonValue tokens = error $ "Invalid match in getJsonValue " ++ show tokens
 
 -- | Split tokens into two parts: nested tokens, and the rest
@@ -73,8 +66,3 @@ getNestedTokensFromLevel (start, end) level (x:xs)
     | x == start = x : getNestedTokensFromLevel (start, end) (level + 1) xs
     | x == end = x : getNestedTokensFromLevel (start, end) (level - 1) xs
     | otherwise = x : getNestedTokensFromLevel (start, end) level xs
-
-
-parseJson :: String -> Maybe [JsonValue]
-parseJson ""      = Nothing
-parseJson content = getJsonValue . filter (/=  TSyntax ',') <$> getTokens content
