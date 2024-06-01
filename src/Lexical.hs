@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -Wno-unused-matches #-}
 {-# LANGUAGE GADTs         #-}
 {-# LANGUAGE InstanceSigs  #-}
 {-# LANGUAGE TupleSections #-}
@@ -101,7 +100,7 @@ tryExtractTNumber str = WithRemaining $ \input ->
         _                     -> (input, Nothing)
 
 tryExtractTString :: String -> WithRemaining Token
-tryExtractTString str = WithRemaining $ \input ->
+tryExtractTString _ = WithRemaining $ \input ->
     if (length input > 1) && (head input == '"')
     then let (readStr, remainingStr) = span (/= '"') (tail input)
         in (tail remainingStr, Just $ TString readStr)
@@ -112,7 +111,7 @@ tryExtractTSyntax (firstChar:rest) | firstChar `elem` "{}[]:," = WithRemaining $
 tryExtractTSyntax str = WithRemaining $ const (str, Nothing)
 
 tryExtractTBool :: String -> WithRemaining Token
-tryExtractTBool str = WithRemaining $ \input ->
+tryExtractTBool _ = WithRemaining $ \input ->
     if "true" `isPrefixOf` input
     then (drop 4 input, Just $ TBool True)
     else if "false" `isPrefixOf` input
