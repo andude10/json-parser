@@ -9,7 +9,7 @@ You can run `app/Main.hs` to test it in console:
 
 ```
 >> stack build
->> stack exec json-parser-test
+>> stack exec parse-json-exe
 Please provide filename:
 example.json
 Parse result: 
